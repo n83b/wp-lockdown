@@ -16,6 +16,21 @@ class WordpressLockdowns {
         add_filter( 'acf/settings/show_admin', [ $this, 'acf_settings_show_admin' ] );
         add_action( 'admin_init', [ $this, 'redirect_non_admin_user' ] );
         add_action( 'after_setup_theme', [ $this, 'remove_admin_bar' ] );
+        
+        //disable feeds
+        add_action( 'do_feed',      [ $this, 'disable_feeds' ], -1 );
+		add_action( 'do_feed_rdf',  [ $this, 'disable_feeds' ], -1 );
+		add_action( 'do_feed_rss',  [ $this, 'disable_feeds' ], -1 );
+		add_action( 'do_feed_rss2', [ $this, 'disable_feeds' ], -1 );
+		add_action( 'do_feed_atom', [ $this, 'disable_feeds' ], -1 );
+		// Disable comment feeds.
+		add_action( 'do_feed_rss2_comments', 'disable_feeds', -1 );
+		add_action( 'do_feed_atom_comments', 'disable_feeds', -1 );
+		// Prevent feed links from being inserted in the <head> of the page.
+		add_action( 'feed_links_show_posts_feed',    '__return_false', -1 );
+		add_action( 'feed_links_show_comments_feed', '__return_false', -1 );
+		remove_action( 'wp_head', 'feed_links',       2 );
+		remove_action( 'wp_head', 'feed_links_extra', 3 );
     }
 
     public function remove_dashboard_widgets() {
@@ -87,9 +102,10 @@ class WordpressLockdowns {
         }
     }
 
-    public function output() {
-        echo 'xmxmxmxmxmxmxmmxmxmxmx';
-    }
+   public function disable_feeds() {
+		wp_redirect( home_url() );
+		die;
+	}
 }
 
 new WordpressLockdowns();
