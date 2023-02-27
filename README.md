@@ -1,2 +1,2 @@
 # wp-lockdown
-Plugin to Lock down the Wordpress dashboard
+A class to lock down the Wordpress dashboard
